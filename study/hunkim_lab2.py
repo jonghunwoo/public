@@ -1,25 +1,12 @@
 import gym
 from gym.envs.registration import register
-import sys, tty, termios
+import readchar
 
 register(
     id='FrozenLake-v3',
     entry_point = 'gym.envs.toy_text:FrozenLakeEnv',
-    kwargs={'map_name': '4x4', 'is_slippery': False}
+    kwargs={'map_name': '4x4', 'is_slippery': True}
 )
-
-class _Getch:
-    def __call__(self):
-        fd = sys.stdin.fileno()
-        old_settings = termios.tcgetattr(fd)
-        try:
-            tty.setraw(sys.stdin.fileno())
-            ch = sys.stdin.read(3)
-        finally:
-            termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
-        return ch
-
-inkey = _Getch()
 
 LEFT = 0
 DOWN = 1
@@ -36,7 +23,8 @@ env = gym.make("FrozenLake-v3")
 env.render()
 
 while True:
-    key = inkey()
+    key = readchar.readkey()
+
     if key not in arrow_keys.keys():
         print("Game aborted!")
         break
