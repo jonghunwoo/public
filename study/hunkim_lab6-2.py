@@ -3,6 +3,7 @@ import gym
 import tensorflow.compat.v1 as tf
 tf.disable_v2_behavior()
 import numpy as np
+import matplotlib.pyplot as plt
 
 env = gym.make('CartPole-v0')
 
@@ -30,7 +31,7 @@ loss = tf.reduce_sum(tf.square(Y-Qpred))
 train = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(loss)
 
 #Values for q learning
-num_episodes = 20000
+num_episodes = 2000
 dis = 0.9
 rList = []
 
@@ -74,6 +75,9 @@ with tf.Session() as sess:
         #if last 10's avg steps are 500, it's good enough
         if len(rList) > 10 and np.mean(rList[-10:]) > 500:
             break
+
+    plt.bar(range(len(rList)), rList, color="blue")
+    plt.show()
 
     #See our trained network in action
     observation = env.reset()
